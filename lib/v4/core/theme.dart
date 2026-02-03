@@ -92,18 +92,20 @@ class AmityThemeColor {
 enum AmityThemeStyle { light, dark, system }
 
 final lightTheme = AmityTheme(
-  primaryColor: const Color(0xFF1054DE),
+  // PARS Purple theme color
+  primaryColor: const Color(0xFF9D53E8),
   secondaryColor: const Color(0xFF292B32),
-  baseColor: const Color(0xFF292B32),
-  baseInverseColor: const Color(0xFF292B32),
-  baseColorShade1: const Color(0xFF636878),
-  baseColorShade2: const Color(0xFF898E9E),
-  baseColorShade3: const Color(0xFFA5A9B5),
-  baseColorShade4: const Color(0xFFEBECEF),
-  alertColor: const Color(0xFFFA4D30),
+  baseColor: const Color(0xFF16181A),
+  baseInverseColor: const Color(0xFFFFFFFF),
+  baseColorShade1: const Color(0xFF595F6A),
+  baseColorShade2: const Color(0xFF8C929D),
+  baseColorShade3: const Color(0xFFE2E4E6),
+  baseColorShade4: const Color(0xFFF6F6F6),
+  alertColor: const Color(0xFFA81F26),
   backgroundColor: const Color(0xFFFFFFFF),
-  backgroundShade1Color: const Color(0xFFF6F7F8),
-  highlightColor: const Color(0xFF1054DE),
+  backgroundShade1Color: const Color(0xFFF6F6F6),
+  // PARS Purple highlight color
+  highlightColor: const Color(0xFF9D53E8),
 );
 
 final darkTheme = AmityTheme(
