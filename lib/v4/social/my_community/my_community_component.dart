@@ -32,23 +32,23 @@ class AmityMyCommunitiesComponent extends NewBaseComponent {
             if (state is MyCommunityLoading) {
               return communitySkeletonList(theme, configProvider);
             } else if (state is MyCommunityLoaded) {
-              return Expanded(
-                child: Column(
-                  children: [
-                    Container(
-                      color: theme.baseColorShade4,
-                      height: 8,
-                    ),
-                    Expanded(
-                      child: communityList(
-                          context, scrollController, state.list, theme, () {
-                        context
-                            .read<MyCommunityBloc>()
-                            .add(MyCommunityEventLoadMore());
-                      }),
-                    ),
-                  ],
-                ),
+              // Note: Removed outer Expanded - parent TabContent is already
+              // wrapped in Expanded by AmitySocialHomePage
+              return Column(
+                children: [
+                  Container(
+                    color: theme.baseColorShade4,
+                    height: 8,
+                  ),
+                  Expanded(
+                    child: communityList(
+                        context, scrollController, state.list, theme, () {
+                      context
+                          .read<MyCommunityBloc>()
+                          .add(MyCommunityEventLoadMore());
+                    }),
+                  ),
+                ],
               );
             } else {
               return Container();
