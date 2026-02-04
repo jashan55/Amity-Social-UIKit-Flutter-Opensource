@@ -46,7 +46,7 @@ class ScrollableTabs extends NewBaseComponent {
             context.read<SocialHomeBloc>().add(TabSelectedEvent(index)),
         style: ElevatedButton.styleFrom(
             foregroundColor:
-                selectedIndex == index ? Colors.white : theme.baseColorShade1,
+                selectedIndex == index ? Colors.white : theme.primaryColor,
             backgroundColor: selectedIndex == index
                 ? theme.primaryColor
                 : Colors.transparent,
