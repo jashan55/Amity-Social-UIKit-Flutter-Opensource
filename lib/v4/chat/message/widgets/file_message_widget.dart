@@ -12,6 +12,10 @@ extension FileMessageWidget on MessageBubbleView {
         ? fileName.split('.').last.toLowerCase()
         : '';
 
+    final bool isUploading =
+        message.syncState != AmityMessageSyncState.SYNCED &&
+            message.syncState != AmityMessageSyncState.FAILED;
+
     Color initialColor = isUser
         ? messageColor.rightBubbleDefault
         : messageColor.leftBubbleDefault;
@@ -22,7 +26,10 @@ extension FileMessageWidget on MessageBubbleView {
           0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment:
+            (message.syncState == AmityMessageSyncState.FAILED)
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.end,
         children: [
           if (isUser &&
               message.createdAt != null &&
@@ -30,126 +37,152 @@ extension FileMessageWidget on MessageBubbleView {
             _buildDateWidget(message.createdAt!),
             const SizedBox(width: 8),
           ],
+          if (isUser && isUploading) ...[
+            _buildSideTextWidget(context.l10n.message_sending),
+            const SizedBox(width: 8),
+          ],
           if (!isUser) ...[
             _buildAvatarWidget(context),
             const SizedBox(width: 8),
           ],
-          if (isUser &&
-              message.syncState != AmityMessageSyncState.SYNCED &&
-              message.syncState != AmityMessageSyncState.FAILED) ...[
-            _buildSideTextWidget(context.l10n.message_sending),
-            const SizedBox(width: 8),
-          ],
           if (message.syncState == AmityMessageSyncState.FAILED &&
               isUser) ...[
-            Container(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: GestureDetector(
-                onTap: () {
-                  _showActionSheet(context);
-                },
-                child: SvgPicture.asset(
-                  'assets/Icons/amity_ic_error_message.svg',
-                  package: 'amity_uikit_beta_service',
-                  width: 16,
-                  height: 16,
-                  color: theme.baseColorShade2,
+            Center(
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: GestureDetector(
+                  onTap: () {
+                    _showActionSheet(context);
+                  },
+                  child: SvgPicture.asset(
+                    'assets/Icons/amity_ic_error_message.svg',
+                    package: 'amity_uikit_beta_service',
+                    width: 16,
+                    height: 16,
+                    colorFilter: ColorFilter.mode(
+                      theme.baseColorShade2,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
-            child: StatefulBuilder(
-              builder: (context, setState) {
-                return GestureDetector(
-                  onTap: () {
-                    if (fileUrl.isNotEmpty) {
-                      _openFile(context, fileUrl, fileName);
-                    }
-                  },
-                  onLongPress: () async {
-                    if (message.syncState == AmityMessageSyncState.FAILED) {
-                      return;
-                    }
-                    HapticFeedback.heavyImpact();
-                    final RenderBox? messageBox =
-                        context.findRenderObject() as RenderBox?;
-                    final Offset? messagePosition =
-                        messageBox?.localToGlobal(Offset.zero);
-                    double height = messageBox?.size.height ?? 0;
-                    double width = messageBox?.size.width ?? 0;
-                    if (message.reactionCount != null &&
-                        message.reactionCount! > 0) {
-                      height += 26;
-                    } else {
-                      height += 4;
-                    }
-                    final offset = Offset(
-                        isUser
-                            ? messagePosition!.dx + width
-                            : messagePosition!.dx,
-                        messagePosition.dy + height);
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (fileUrl.isNotEmpty) {
+                              _openFile(context, fileUrl, fileName);
+                            }
+                          },
+                          onLongPress: () async {
+                            if (message.syncState ==
+                                AmityMessageSyncState.FAILED) {
+                              return;
+                            }
+                            HapticFeedback.heavyImpact();
+                            final RenderBox? messageBox =
+                                context.findRenderObject() as RenderBox?;
+                            final Offset? messagePosition =
+                                messageBox?.localToGlobal(Offset.zero);
+                            double height = messageBox?.size.height ?? 0;
+                            double width = messageBox?.size.width ?? 0;
+                            if (message.reactionCount != null &&
+                                message.reactionCount! > 0) {
+                              height += 26;
+                            } else {
+                              height += 4;
+                            }
+                            final offset = Offset(
+                                isUser
+                                    ? messagePosition!.dx + width
+                                    : messagePosition!.dx,
+                                messagePosition.dy + height);
 
-                    final reactions =
-                        configProvider.getAllMessageReactions();
-                    final reactionActionOffset = Offset(
-                        isUser
-                            ? messagePosition.dx + width - 208
-                            : messagePosition.dx,
-                        messagePosition.dy - 52);
-                    await _showReactionAndMenu(context, offset,
-                        reactionActionOffset, message, state, reactions);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: initialColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _getFileIcon(extension, isUser),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                fileName,
-                                style: TextStyle(
-                                  color: isUser
-                                      ? messageColor.rightBubbleText
-                                      : messageColor.leftBubbleText,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                            final reactions =
+                                configProvider.getAllMessageReactions();
+                            final reactionActionOffset = Offset(
+                                isUser
+                                    ? messagePosition.dx + width - 208
+                                    : messagePosition.dx,
+                                messagePosition.dy - 52);
+                            await _showReactionAndMenu(context, offset,
+                                reactionActionOffset, message, state, reactions);
+                          },
+                          child: Opacity(
+                            opacity: isUploading ? 0.5 : 1.0,
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: initialColor,
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _formatFileSize(fileSize),
-                                style: TextStyle(
-                                  color: isUser
-                                      ? messageColor.rightBubbleText
-                                          .withOpacity(0.7)
-                                      : messageColor.leftBubbleText
-                                          .withOpacity(0.7),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _getFileIcon(extension, isUser),
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          fileName,
+                                          style: TextStyle(
+                                            color: isUser
+                                                ? messageColor.rightBubbleText
+                                                : messageColor.leftBubbleText,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          _formatFileSize(fileSize),
+                                          style: TextStyle(
+                                            color: isUser
+                                                ? messageColor.rightBubbleText
+                                                    .withOpacity(0.7)
+                                                : messageColor.leftBubbleText
+                                                    .withOpacity(0.7),
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  ),
-                );
-              },
+                    if (message.syncState ==
+                        AmityMessageSyncState.FAILED) ...[
+                      const SizedBox(height: 4),
+                      _buildFailToSendText(context),
+                    ],
+                  ],
+                ),
+                if (isUploading) _buildUploadingIndicator(),
+                if (message.syncState == AmityMessageSyncState.UPLOADING)
+                  _buildCancelDownloadButton(),
+              ],
             ),
           ),
           if (!isUser && message.createdAt != null) ...[
