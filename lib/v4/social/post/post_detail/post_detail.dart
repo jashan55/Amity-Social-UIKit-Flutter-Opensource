@@ -9,7 +9,6 @@ import 'package:amity_uikit_beta_service/v4/social/post/common/post_header.dart'
 import 'package:amity_uikit_beta_service/v4/social/post/post_detail/post_detail_info.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/post_item/bloc/post_item_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/post/post_item/post_item_bottom.dart';
-import 'package:amity_uikit_beta_service/v4/social/post/post_item/post_item_bottom_nonmember.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -89,9 +88,7 @@ class PostDetail extends NewBaseComponent {
                   theme: theme),
             ),
             PostDetailInfo(post: post, componentId: ''),
-            hideMenu
-                ? PostBottomNonMember()
-                : PostItemBottom(
+            PostItemBottom(
                     post: post,
                     action: postAction,
                     isReacting: state.isReacting,
