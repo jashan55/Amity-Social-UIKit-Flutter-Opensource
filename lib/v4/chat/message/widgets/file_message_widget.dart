@@ -6,7 +6,7 @@ extension FileMessageWidget on MessageBubbleView {
     final fileData = message.data as MessageFileData;
     final file = fileData.file;
     final fileName = file?.fileName ?? "Unknown file";
-    final fileSize = (file?.fileSize as int?) ?? 0;
+    final fileSize = int.tryParse(file?.fileSize?.toString() ?? '') ?? 0;
     final fileUrl = file?.fileUrl ?? "";
     final extension = fileName.contains('.')
         ? fileName.split('.').last.toLowerCase()
