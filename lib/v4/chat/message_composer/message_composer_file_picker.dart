@@ -18,7 +18,7 @@ extension MessageComposerFilePicker on AmityMessageComposer {
       }
 
       final result = await FilePicker.platform.pickFiles(
-        type: FileType.media,
+        type: type,
         allowMultiple: false,
         withData: false,
         withReadStream: false,
@@ -34,6 +34,36 @@ extension MessageComposerFilePicker on AmityMessageComposer {
           context.read<MessageComposerBloc>().add(
                 MessageComposerSelectImageAndVideoEvent(
                   selectedMedia: selectedMedia,
+                ),
+              );
+          return;
+        }
+      }
+
+      toastBloc.add(AmityToastDismiss());
+    } catch (e) {
+      toastBloc.add(AmityToastDismiss());
+    }
+  }
+
+  void pickDocumentFiles(BuildContext context, String appName) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+        withData: false,
+        withReadStream: false,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final pickedFile = result.files.first;
+        final path = pickedFile.path;
+        if (path != null) {
+          action.onMessageCreated();
+          if (!context.mounted) return;
+          context.read<MessageComposerBloc>().add(
+                MessageComposerSelectFileEvent(
+                  filePath: path,
                 ),
               );
           return;

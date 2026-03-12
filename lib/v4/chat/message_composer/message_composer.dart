@@ -627,13 +627,23 @@ class AmityMessageComposer extends NewBaseComponent {
             },
           ),
           const SizedBox(
-            width: 72,
+            width: 48,
           ),
           renderMediaButton(
             "assets/Icons/amity_ic_image_button.svg",
             context.l10n.message_media,
             () {
-              pickMultipleFiles(context, appName, FileType.any);
+              pickMultipleFiles(context, appName, FileType.media);
+            },
+          ),
+          const SizedBox(
+            width: 48,
+          ),
+          renderMediaButton(
+            "assets/Icons/amity_ic_attachment_button.svg",
+            "File",
+            () {
+              pickDocumentFiles(context, appName);
             },
           ),
         ],

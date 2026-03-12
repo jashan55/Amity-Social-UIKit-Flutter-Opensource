@@ -322,8 +322,9 @@ class ChatListItem extends BaseElement {
             height: 20,
             color: theme.baseColorShade2,
           );
-        } else if (messageData is MessageFileData ||
-            messageData is MessageAudioData) {
+        } else if (messageData is MessageFileData) {
+          previewText = "\u{1F4CE} File";
+        } else if (messageData is MessageAudioData) {
           previewText = context.l10n.chat_message_no_preview;
         } else if (messageData is MessageCustomData) {
           previewText = messageData.rawData.toString();
@@ -364,9 +365,9 @@ class ChatListItem extends BaseElement {
             height: 20,
             color: theme.baseColorShade2,
           );
-        } else if (previewMessage is MessageFileData ||
-            previewMessage is MessageAudioData) {
-          // To be implement
+        } else if (previewMessage is MessageFileData) {
+          previewText = "\u{1F4CE} File";
+        } else if (previewMessage is MessageAudioData) {
           previewText = context.l10n.chat_message_no_preview;
         } else if (previewMessage is MessageCustomData) {
           previewText = previewMessage.rawData.toString();

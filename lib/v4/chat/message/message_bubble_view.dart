@@ -48,6 +48,7 @@ part 'widgets/parent_message_widget.dart';
 part 'widgets/reaction_preview.dart';
 part 'widgets/text_message_widget.dart';
 part 'widgets/video_message_widget.dart';
+part 'widgets/file_message_widget.dart';
 
 @Deprecated('Use AmityMessageBubble instead. This class will be removed in a future version.')
 class MessageBubbleView extends NewBaseComponent {
@@ -226,6 +227,8 @@ class MessageBubbleView extends NewBaseComponent {
         return _buildImageMessageWidget(context, isUser, state, bounce);
       } else if (message.data is MessageVideoData) {
         return _buildVideoMessageWidget(context, isUser, thumbnail, state);
+      } else if (message.data is MessageFileData) {
+        return _buildFileMessageWidget(context, isUser, state);
       } else if (message.data is MessageCustomData) {
         return _buildCustomMessageWidget(context, isUser, state);
       } else {

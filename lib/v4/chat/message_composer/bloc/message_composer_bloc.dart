@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
@@ -224,6 +226,47 @@ class MessageComposerBloc
 
     on<MessageComposerMediaCollapsed>((event, emit) {
       emit(state.copyWith(showMediaSection: false));
+    });
+
+    on<MessageComposerSelectFileEvent>((event, emit) async {
+      try {
+        final fileSize = await File(event.filePath).length();
+        if (fileSize > 1 * 1024 * 1024 * 1024) {
+          toastBloc.add(const AmityToastShort(
+              message:
+                  "The selected file is too large. Please select a file smaller than 1GB."));
+        } else {
+          final uri = Uri(path: event.filePath);
+          try {
+            final replyTo = this.replyTo;
+            if (replyTo != null) {
+              ParentMessageCache().addMessage(replyTo.messageId!, replyTo);
+            }
+            await AmityChatClient.newMessageRepository()
+                .createMessage(subChannelId)
+                .parentId(state.replyTo?.messageId)
+                .file(uri)
+                .send();
+          } catch (error) {
+            if (error is AmityException) {
+              if (error.code ==
+                  error.getErrorCode(AmityErrorCode.LINK_NOT_IN_WHITELIST)) {
+                toastBloc.add(const AmityToastShort(
+                    message:
+                        "Your message wasn't sent as it contains a link that's not allowed."));
+              } else {
+                toastBloc.add(AmityUIKitToastLong(
+                    message: "Failed to send file: ${error.toString()}",
+                    bottomPadding: AmityChatPage.toastBottomPadding));
+              }
+            } else {
+              toastBloc.add(AmityUIKitToastLong(
+                  message: "Failed to send file: ${error.toString()}",
+                  bottomPadding: AmityChatPage.toastBottomPadding));
+            }
+          }
+        }
+      } catch (error) {}
     });
 
     on<MessageComposerSelectImageAndVideoEvent>((event, emit) async {

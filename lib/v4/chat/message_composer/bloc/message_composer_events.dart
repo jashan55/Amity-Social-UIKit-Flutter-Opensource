@@ -77,6 +77,15 @@ class MessageComposerSelectImageAndVideoEvent extends MessageComposerEvent {
   get props => [selectedMedia, fromCamera];
 }
 
+class MessageComposerSelectFileEvent extends MessageComposerEvent {
+  final String filePath;
+
+  const MessageComposerSelectFileEvent({required this.filePath});
+
+  @override
+  List<Object> get props => [filePath];
+}
+
 class MessageComposerSelectVideosEvent extends MessageComposerEvent {
   final XFile selectedVideos;
 
