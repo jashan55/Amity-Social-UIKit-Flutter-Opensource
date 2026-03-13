@@ -28,18 +28,26 @@ class PostItemBloc extends Bloc<PostItemEvent, PostItemState> {
     on<AddReactionToPost>((event, emit) async {
       AmityPost post = event.post;
       emit(state.copyWith(isReacting: true));
-      if (post.myReactions?.isNotEmpty ?? false) {
-        await post.react().removeReaction(post.myReactions!.first);
+      try {
+        if (post.myReactions?.isNotEmpty ?? false) {
+          await post.react().removeReaction(post.myReactions!.first);
+        }
+        await post.react().addReaction(event.reactionType);
+      } catch (e) {
+        debugPrint('[PostItemBloc] addReaction failed: $e');
       }
-      await post.react().addReaction(event.reactionType);
       emit(state.copyWith(isReacting: false));
     });
 
     on<RemoveReactionToPost>((event, emit) async {
       AmityPost post = event.post;
       emit(state.copyWith(isReacting: true));
-      if (post.myReactions?.isNotEmpty ?? false) {
-        await post.react().removeReaction(event.reactionType);
+      try {
+        if (post.myReactions?.isNotEmpty ?? false) {
+          await post.react().removeReaction(event.reactionType);
+        }
+      } catch (e) {
+        debugPrint('[PostItemBloc] removeReaction failed: $e');
       }
       emit(state.copyWith(isReacting: false));
     });
