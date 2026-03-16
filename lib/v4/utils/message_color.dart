@@ -39,6 +39,7 @@ class MessageColor {
   Color getColor(String configName, Color defaultColor) {
     try {
       final configString = config[configName] as String?;
+      if (configString == null || configString.isEmpty) return defaultColor;
       return _colorFromHex(configString);
     } catch (e) {
       return defaultColor;

@@ -545,6 +545,45 @@
             "right_bubble_text_color": "#FFFFFF",
             "right_bubble_subtle_text_color": "#EBDDFA",
             "bubble_divider_color": "#E2E4E6"
+        },
+        "group_chat_page/message_bubble/*": {
+            "theme": {
+                "light": {
+                    "primary_color": "#9D53E8",
+                    "secondary_color": "#292B32",
+                    "base_color": "#16181A",
+                    "base_shade1_color": "#595F6A",
+                    "base_shade2_color": "#8C929D",
+                    "base_shade3_color": "#E2E4E6",
+                    "base_shade4_color": "#F6F6F6",
+                    "alert_color": "#A81F26",
+                    "background_color": "#FFFFFF",
+                    "base_inverse_color": "#000000",
+                    "highlight_color": "#9D53E8"
+                },
+                "dark": {
+                    "primary_color": "#9D53E8",
+                    "secondary_color": "#292B32",
+                    "base_color": "#EBECEF",
+                    "base_shade1_color": "#A5A9B5",
+                    "base_shade2_color": "#6E7487",
+                    "base_shade3_color": "#40434E",
+                    "base_shade4_color": "#292B32",
+                    "alert_color": "#A81F26",
+                    "background_color": "#191919",
+                    "base_inverse_color": "#FFFFFF",
+                    "highlight_color": "#9D53E8"
+                }
+            },
+            "left_bubble_color": "#F6F6F6",
+            "left_bubble_pressed_color": "#E2E4E6",
+            "left_bubble_text_color": "#16181A",
+            "left_bubble_subtle_text_color": "#595F6A",
+            "right_bubble_color": "#9D53E8",
+            "right_bubble_pressed_color": "#7B3DBD",
+            "right_bubble_text_color": "#FFFFFF",
+            "right_bubble_subtle_text_color": "#EBDDFA",
+            "bubble_divider_color": "#E2E4E6"
         }
     }
 }
