@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/chat/archive/archived_chat_page.dart';
 import 'package:amity_uikit_beta_service/v4/chat/create/channel_create_conversation_page.dart';
@@ -264,66 +265,68 @@ class AmityCreateChatMenuComponent extends NewBaseComponent {
             },
           ),
         ),
-        const SizedBox(width: 10),
-        // Create chat button
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: theme.secondaryColor.blend(ColorBlendingOption.shade4),
-            shape: BoxShape.circle,
-          ),
-          child: PopupMenuButton<int>(
-            color: theme.backgroundColor,
-            surfaceTintColor: theme.backgroundColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+        if (AmityUIKit.chatCreationEnabled) ...[
+          const SizedBox(width: 10),
+          // Create chat button
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: theme.secondaryColor.blend(ColorBlendingOption.shade4),
+              shape: BoxShape.circle,
             ),
-            elevation: 3,
-            offset: const Offset(0, 36),
-            icon: SvgPicture.asset(
-              "assets/Icons/amity_ic_post_creation_button.svg",
-              package: 'amity_uikit_beta_service',
-              colorFilter: ColorFilter.mode(
-                theme.secondaryColor,
-                BlendMode.srcIn,
+            child: PopupMenuButton<int>(
+              color: theme.backgroundColor,
+              surfaceTintColor: theme.backgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
+              elevation: 3,
+              offset: const Offset(0, 36),
+              icon: SvgPicture.asset(
+                "assets/Icons/amity_ic_post_creation_button.svg",
+                package: 'amity_uikit_beta_service',
+                colorFilter: ColorFilter.mode(
+                  theme.secondaryColor,
+                  BlendMode.srcIn,
+                ),
+              ),
+              padding: const EdgeInsets.all(5),
+              onSelected: (int result) {
+                if (result == 1) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) =>
+                            AmityChannelCreateConversationPage()),
+                  );
+                } else if (result == 2) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => AmitySelectGroupMemberPage()),
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+                PopupMenuItem<int>(
+                  value: 1,
+                  padding: EdgeInsets.zero,
+                  child: getMenu(
+                      text: context.l10n.chat_direct_chat,
+                      iconPath: "amity_ic_chat_create_button.svg"),
+                ),
+                PopupMenuItem<int>(
+                  value: 2,
+                  padding: EdgeInsets.zero,
+                  child: getMenu(
+                      text: context.l10n.chat_group_chat,
+                      iconPath: "amity_ic_create_group_chat_button.svg"),
+                ),
+              ],
             ),
-            padding: const EdgeInsets.all(5),
-            onSelected: (int result) {
-              if (result == 1) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) =>
-                          AmityChannelCreateConversationPage()),
-                );
-              } else if (result == 2) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) => AmitySelectGroupMemberPage()),
-                );
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-              PopupMenuItem<int>(
-                value: 1,
-                padding: EdgeInsets.zero,
-                child: getMenu(
-                    text: context.l10n.chat_direct_chat,
-                    iconPath: "amity_ic_chat_create_button.svg"),
-              ),
-              PopupMenuItem<int>(
-                value: 2,
-                padding: EdgeInsets.zero,
-                child: getMenu(
-                    text: context.l10n.chat_group_chat,
-                    iconPath: "amity_ic_create_group_chat_button.svg"),
-              ),
-            ],
           ),
-        ),
+        ],
         const SizedBox(width: 10),
       ],
     );
