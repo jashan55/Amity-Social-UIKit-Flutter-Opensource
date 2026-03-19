@@ -151,34 +151,31 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       DateTime? lastCreatedDate;
       for (var message in event.messages) {
         ParentMessageCache().updateMessageIfExists(message.messageId!, message);
-        if (message.createdAt != null) {
-          if (lastCreatedDate == null) {
-            lastCreatedDate = message.createdAt!.toLocal();
-          } else {
-            if (lastCreatedDate
-                    .difference(message.createdAt!.toLocal())
-                    .inDays >
-                0) {
-              String dateString =
-                  DateFormat('EEE, d MMM').format(lastCreatedDate);
-              groupedMessages.add(ChatItem.date(dateString));
-              lastCreatedDate = message.createdAt!.toLocal();
-            }
-          }
+        final messageTime = (message.createdAt ?? DateTime.now()).toLocal();
 
-          groupedMessages.add(ChatItem.message(message));
-
-          if (message == event.messages.last) {
-            int currentYear = DateTime.now().year;
-            int messageYear = lastCreatedDate.year;
-
-            String dateString = (messageYear == currentYear)
-                ? DateFormat('EEE, d MMM').format(lastCreatedDate)
-                : DateFormat('EEE, d MMM yyyy').format(lastCreatedDate);
-
+        if (lastCreatedDate == null) {
+          lastCreatedDate = messageTime;
+        } else {
+          if (lastCreatedDate.difference(messageTime).inDays > 0) {
+            String dateString =
+                DateFormat('EEE, d MMM').format(lastCreatedDate);
             groupedMessages.add(ChatItem.date(dateString));
-            lastCreatedDate = message.createdAt!.toLocal();
+            lastCreatedDate = messageTime;
           }
+        }
+
+        groupedMessages.add(ChatItem.message(message));
+
+        if (message == event.messages.last) {
+          int currentYear = DateTime.now().year;
+          int messageYear = lastCreatedDate.year;
+
+          String dateString = (messageYear == currentYear)
+              ? DateFormat('EEE, d MMM').format(lastCreatedDate)
+              : DateFormat('EEE, d MMM yyyy').format(lastCreatedDate);
+
+          groupedMessages.add(ChatItem.date(dateString));
+          lastCreatedDate = messageTime;
         }
       }
 
