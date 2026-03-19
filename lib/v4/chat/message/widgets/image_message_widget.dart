@@ -4,7 +4,12 @@ extension ImageMessageWidget on MessageBubbleView {
   Widget _buildImageMessageWidget(BuildContext context, bool isUser,
       MessageBubbleState state, double bounce) {
     final image = (message.data as MessageImageData).image;
-    final fileUrl = image?.getUrl(AmityImageSize.MEDIUM) ?? "";
+    String fileUrl;
+    try {
+      fileUrl = image?.getUrl(AmityImageSize.MEDIUM) ?? "";
+    } catch (_) {
+      fileUrl = "";
+    }
     final filePath = image?.getFilePath;
     return Transform.translate(
       offset: Offset(
@@ -296,8 +301,8 @@ extension ImageMessageWidget on MessageBubbleView {
                   width: 40,
                   height: 40,
                   child: CircularProgressIndicator(
-                    color: Colors.white,
-                    backgroundColor: Colors.white.withOpacity(0.8),
+                    color: theme.primaryColor,
+                    backgroundColor: theme.primaryColor.withOpacity(0.3),
                     strokeWidth: 2,
                   ),
                 ),

@@ -110,8 +110,8 @@ extension GenericWidget on MessageBubbleView {
       width: 38,
       height: 38,
       child: CircularProgressIndicator(
-        color: Colors.white,
-        backgroundColor: Colors.white.withOpacity(0.8),
+        color: theme.primaryColor,
+        backgroundColor: theme.primaryColor.withOpacity(0.3),
         strokeWidth: 2,
       ),
     );
