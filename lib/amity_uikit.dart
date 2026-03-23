@@ -130,10 +130,11 @@ class AmityUIKit {
       required String userId,
       String? displayName,
       String? authToken,
+      String? avatarUrl,
       Function(bool isSuccess, String? error)? callback}) async {
     Stopwatch stopwatch = Stopwatch()..start();
     await Provider.of<AmityVM>(context, listen: false)
-        .login(userID: userId, displayName: displayName, authToken: authToken)
+        .login(userID: userId, displayName: displayName, authToken: authToken, avatarUrl: avatarUrl)
         .then((value) async {
       log("login success");
 
