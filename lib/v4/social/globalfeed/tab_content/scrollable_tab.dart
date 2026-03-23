@@ -41,31 +41,44 @@ class ScrollableTabs extends NewBaseComponent {
       BuildContext context, String text, int index, int selectedIndex) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: ElevatedButton(
-        onPressed: () =>
-            context.read<SocialHomeBloc>().add(TabSelectedEvent(index)),
-        style: ElevatedButton.styleFrom(
-            foregroundColor:
-                selectedIndex == index ? Colors.white : theme.primaryColor,
-            backgroundColor: selectedIndex == index
-                ? theme.primaryColor
-                : Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+      child: Builder(
+        builder: (buttonContext) => ElevatedButton(
+          onPressed: () {
+            context.read<SocialHomeBloc>().add(TabSelectedEvent(index));
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (buttonContext.mounted) {
+                Scrollable.ensureVisible(
+                  buttonContext,
+                  alignment: 0.5,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            });
+          },
+          style: ElevatedButton.styleFrom(
+              foregroundColor:
+                  selectedIndex == index ? Colors.white : theme.primaryColor,
+              backgroundColor: selectedIndex == index
+                  ? theme.primaryColor
+                  : Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              side: BorderSide(
+                  color: selectedIndex == index
+                      ? theme.primaryColor
+                      : theme.baseColorShade4,
+                  width: 1.0),
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight:
+                  selectedIndex == index ? FontWeight.bold : FontWeight.normal,
             ),
-            side: BorderSide(
-                color: selectedIndex == index
-                    ? theme.primaryColor
-                    : theme.baseColorShade4,
-                width: 1.0),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight:
-                selectedIndex == index ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ),
