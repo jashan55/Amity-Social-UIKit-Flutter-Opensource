@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/alert_dialog.dart';
 
@@ -70,8 +71,18 @@ class AmityVM extends ChangeNotifier {
 
   /// Downloads an image from [url], uploads it to Amity's file repository,
   /// and sets it as the current user's avatar.
+  static const _avatarSyncKey = 'amity_last_synced_avatar_url';
+
   Future<void> _syncAvatarFromUrl(String url) async {
     try {
+      // Skip if this URL was already synced
+      final prefs = await SharedPreferences.getInstance();
+      final lastSynced = prefs.getString(_avatarSyncKey);
+      if (lastSynced == url) {
+        log("syncAvatar: already synced, skipping");
+        return;
+      }
+
       log("syncAvatar: downloading from $url");
 
       // Download image to a temp file
@@ -127,9 +138,10 @@ class AmityVM extends ChangeNotifier {
           .updateUser(currentamityUser!.userId!)
           .avatarFileId(fileId)
           .update()
-          .then((user) {
+          .then((user) async {
         currentamityUser = user;
         notifyListeners();
+        await prefs.setString(_avatarSyncKey, url);
         log("syncAvatar: avatar updated successfully");
       }).onError((error, stackTrace) {
         log("syncAvatar: update user error $error");

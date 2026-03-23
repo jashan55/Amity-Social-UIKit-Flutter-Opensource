@@ -7,6 +7,7 @@ import 'package:amity_uikit_beta_service/uikit_behavior.dart';
 import 'package:amity_uikit_beta_service/l10n/generated/app_localizations.dart';
 import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/parent_message_cache.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/globalfeed/bloc/global_feed_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/social_home_page/bloc/social_home_bloc.dart';
@@ -199,6 +200,10 @@ class AmityUIKit {
   }
 
   void unRegisterDevice() {
+    // Clear cached avatar sync URL so a fresh login re-syncs
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.remove('amity_last_synced_avatar_url');
+    });
     AmityCoreClient.unregisterDeviceNotification();
     ParentMessageCache().clear();
     AmityCoreClient.logout();
