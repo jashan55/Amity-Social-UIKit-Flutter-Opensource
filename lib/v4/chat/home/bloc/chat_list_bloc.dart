@@ -28,6 +28,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
           .types(channelTypes)
           .filter(AmityChannelFilter.MEMBER)
           .excludeArchives(true)
+          .includeDeleted(false)
           .getLiveCollection();
     }
 

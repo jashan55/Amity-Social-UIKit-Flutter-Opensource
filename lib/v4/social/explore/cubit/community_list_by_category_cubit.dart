@@ -23,6 +23,7 @@ class CommunityByCategoryListCubit extends Cubit<CommunityState> {
         .getCommunities()
         .categoryId(categoryId)
         .sortBy(AmityCommunitySortOption.DISPLAY_NAME)
+        .includeDeleted(false)
         .getLiveCollection(pageSize: 20);
 
     _subscription =

@@ -18,6 +18,7 @@ class PostTargetSelectionBloc
         .getCommunities()
         .filter(AmityCommunityFilter.MEMBER)
         .sortBy(AmityCommunitySortOption.DISPLAY_NAME)
+        .includeDeleted(false)
         .getLiveCollection(pageSize: 20);
 
     _subscription = communityLiveCollection
