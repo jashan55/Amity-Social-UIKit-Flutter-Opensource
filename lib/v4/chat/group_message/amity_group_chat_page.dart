@@ -86,6 +86,15 @@ class AmityGroupChatPage extends NewBasePage {
                         .add(AmityToastDismissIfLoading());
                     _handleToastDismissal(context, state);
                   }
+                  // Dismiss loading toast for empty chats that finished loading
+                  // but state is still Initial (race between message stream and loading state)
+                  if (!state.isFetching &&
+                      state is GroupChatPageStateInitial &&
+                      !isJustCreated) {
+                    context
+                        .read<AmityToastBloc>()
+                        .add(AmityToastDismissIfLoading());
+                  }
 
                   final List<GlobalKey> itemKeys = List.generate(
                       state.messages.length, (index) => GlobalKey());
@@ -206,6 +215,24 @@ class AmityGroupChatPage extends NewBasePage {
                                     context.read<AmityGroupChatPageBloc>().add(
                                         GroupChatPageEventMarkReadMessage(
                                             message: firstItem));
+                                  }
+
+                                  // Show empty state when loading is done and there are no messages
+                                  if (!state.isFetching &&
+                                      state.messages.isEmpty &&
+                                      state is! GroupChatPageStateInitial) {
+                                    return Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(24.0),
+                                        child: Text(
+                                          context.l10n.chat_no_message_yet,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: theme.baseColorShade1,
+                                          ),
+                                        ),
+                                      ),
+                                    );
                                   }
 
                                   final shouldUseReverse =
