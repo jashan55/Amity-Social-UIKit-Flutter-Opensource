@@ -500,6 +500,7 @@ class AmityGroupChatPageBloc
 
   @override
   Future<void> close() {
+    toastBloc.add(AmityToastDismissIfLoading());
     _scrollController.dispose();
     subscription?.cancel();
     _jumpToMessageTimeoutTimer?.cancel();
