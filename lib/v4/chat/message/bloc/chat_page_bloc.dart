@@ -648,17 +648,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     
     liveCollection = query.getLiveCollection();
 
-    final list = await AmityChatClient.newChannelRepository()
-        .membership(channelId)
-        .getMembersFromCache();
-    final otherMember = list
-        .firstWhere((element) => element.userId != AmityCoreClient.getUserId());
-
-    if (otherMember.user != null) {
-      addEvent(ChatPageHeaderEventChanged(channelMember: otherMember));
-      // User will be updated in the HeaderEventChanged handler
-    }
-
+    // Set up stream listeners FIRST (before any async work)
+    // to avoid race condition where messages are emitted before listeners exist
     liveCollection?.getStreamController().stream.listen((event) {
       addEvent(
           ChatPageEventChanged(messages: event, isFetching: state.isFetching));
@@ -677,6 +668,22 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         addEvent(const ChatPageNetworkConnectivityChanged(isConnected: true));
       }
     });
+
+    // Member lookup AFTER listeners, wrapped in try-catch
+    // (firstWhere throws if cache isn't populated yet for a just-created channel)
+    try {
+      final list = await AmityChatClient.newChannelRepository()
+          .membership(channelId)
+          .getMembersFromCache();
+      final otherMember = list
+          .firstWhere((element) => element.userId != AmityCoreClient.getUserId());
+
+      if (otherMember.user != null) {
+        addEvent(ChatPageHeaderEventChanged(channelMember: otherMember));
+      }
+    } catch (e) {
+      debugPrint('[ChatPageBloc] getMembersFromCache failed (non-fatal): $e');
+    }
   }
 
   /// Start progressive scroll animation to find and highlight target message

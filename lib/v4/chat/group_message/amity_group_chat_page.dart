@@ -415,6 +415,15 @@ class AmityGroupChatPage extends NewBasePage {
             context
                 .read<AmityGroupChatPageBloc>()
                 .add(const GroupChatPageRemoveReplyEvent());
+            // Force refresh to catch locally-sent messages
+            // in case live collection missed the update
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (context.mounted) {
+                context
+                    .read<AmityGroupChatPageBloc>()
+                    .add(GroupChatPageEventRefresh());
+              }
+            });
             state.scrollController.animateTo(
               0.0,
               curve: Curves.easeOut,
