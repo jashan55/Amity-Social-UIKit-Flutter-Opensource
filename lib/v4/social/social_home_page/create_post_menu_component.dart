@@ -1,5 +1,6 @@
 // Define the PopupMenu class
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
+import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/post_target_selection_page/post_target_selection_page.dart';
 import 'package:amity_uikit_beta_service/view/UIKit/social/story_target_page.dart';
@@ -15,6 +16,9 @@ class AmityCreatePostMenuComponent extends NewBaseComponent {
 
   @override
   Widget buildComponent(BuildContext context) {
+    if (!AmityUIKit.postCreationEnabled) {
+      return const SizedBox.shrink();
+    }
     return Row(
       children: [
         Container(

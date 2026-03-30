@@ -58,6 +58,7 @@ enum AmityEndpointRegion {
 class AmityUIKit {
   static List<CameraDescription> cameras = <CameraDescription>[];
   static bool chatCreationEnabled = true;
+  static bool postCreationEnabled = true;
 
   Future<void> setup({
     required String apikey,

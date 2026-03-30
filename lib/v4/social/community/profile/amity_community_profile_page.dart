@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/amity_uikit.dart';
 import 'package:amity_uikit_beta_service/l10n/localization_helper.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_page.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
@@ -285,7 +286,7 @@ class AmityCommunityProfilePage extends NewBasePage {
               ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.endFloat,
-              floatingActionButton: (state.isJoined)
+              floatingActionButton: (state.isJoined && AmityUIKit.postCreationEnabled)
                   ? GestureDetector(
                       onTap: () {
                         showActions(context, state.canManageStory,
