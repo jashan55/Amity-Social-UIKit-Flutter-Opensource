@@ -20,7 +20,9 @@ class CategoryListCubit extends Cubit<CategoryState> {
           .sortBy(AmityCommunityCategorySortOption.NAME)
           .includeDeleted(false)
           .getPagingData()
-          .then((value) => value.data);
+          .then((value) => value.data
+              .where((c) => c.isDeleted != true)
+              .toList());
 
       emit(state.copyWith(
         isLoading: false,

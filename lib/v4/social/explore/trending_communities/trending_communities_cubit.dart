@@ -28,7 +28,10 @@ class TrendingCommunitiesCubit extends Cubit<CommunityState> {
       emit(state.copyWith(isLoading: true));
       final communities = await AmitySocialClient.newCommunityRepository()
           .getTrendingCommunities()
-          .then((communities) => communities.take(5).toList());
+          .then((communities) => communities
+              .where((c) => c.isDeleted != true)
+              .take(5)
+              .toList());
 
       emit(state.copyWith(
         isLoading: false,

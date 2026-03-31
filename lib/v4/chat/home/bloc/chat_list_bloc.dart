@@ -142,7 +142,10 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
 
     channelLiveCollection.getStream().listen((event) {
       addEvent(ChatListEventLoadingStateUpdated(isLoading: event.isFetching));
-      addEvent(ChatListEventChannelsUpdated(channels: event.data));
+      final channels = event.data
+          .where((c) => c.isDeleted != true)
+          .toList();
+      addEvent(ChatListEventChannelsUpdated(channels: channels));
     });
 
     // Query for notification settings
