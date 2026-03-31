@@ -6,8 +6,6 @@ import 'package:amity_uikit_beta_service/v4/social/explore/category/amity_explor
 import 'package:amity_uikit_beta_service/v4/social/explore/explore_component_cubit.dart';
 import 'package:amity_uikit_beta_service/v4/social/explore/explore_component_state.dart';
 import 'package:amity_uikit_beta_service/v4/social/explore/list_state/amity_list_states.dart';
-import 'package:amity_uikit_beta_service/v4/social/explore/recommended_communities/amity_recommended_communities_component.dart';
-import 'package:amity_uikit_beta_service/v4/social/explore/recommended_communities/amity_recommended_community_shimmer.dart';
 import 'package:amity_uikit_beta_service/v4/social/explore/trending_communities/amity_trending_communities_component.dart';
 import 'package:amity_uikit_beta_service/v4/social/explore/trending_communities/amity_trending_community_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +45,6 @@ class AmityExploreComponent extends NewBaseComponent {
       children: [
         _getDivider(),
         AmityExploreCategoryShimmer(),
-        AmityRecommendedCommunityShimmer(),
         AmityTrendingCommunityShimmer()
       ],
     );
@@ -70,13 +67,7 @@ class AmityExploreComponent extends NewBaseComponent {
               context.read<ExploreComponentCubit>().setCategoryState(state);
             },
           ),
-          AmityRecommendedCommunitiesComponent(
-            pageId: pageId,
-            refreshController: _refreshController,
-            onStateChanged: (state) {
-              context.read<ExploreComponentCubit>().setRecommendedState(state);
-            },
-          ),
+
           AmityTrendingCommunitiesComponent(
             pageId: pageId,
             refreshController: _refreshController,
