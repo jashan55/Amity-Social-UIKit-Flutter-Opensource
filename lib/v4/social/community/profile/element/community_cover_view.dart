@@ -103,7 +103,7 @@ class AmityCommunityCoverView extends BaseElement {
 
   Widget renderAvatarImage() {
     final url = community?.avatarImage?.getUrl(AmityImageSize.LARGE);
-    return (url != null)
+    return (url != null && isValidImageUrl(url))
         ? Container(width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(

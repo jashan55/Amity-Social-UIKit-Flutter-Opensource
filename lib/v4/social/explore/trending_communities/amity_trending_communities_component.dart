@@ -11,6 +11,7 @@ import 'package:amity_uikit_beta_service/v4/social/explore/recommended_communiti
 import 'package:amity_uikit_beta_service/v4/social/explore/trending_communities/amity_trending_community_shimmer.dart';
 import 'package:amity_uikit_beta_service/v4/social/explore/trending_communities/trending_communities_cubit.dart';
 import 'package:amity_uikit_beta_service/v4/utils/compact_string_converter.dart';
+import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -137,24 +138,7 @@ class AmityJoinCommunityView extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image.network(
-                    community.avatarImage?.getUrl(AmityImageSize.MEDIUM) ?? '',
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                        width: 80,
-                        height: 80,
-                        color: theme.baseColorShade3,
-                        child: Center(
-                          child: SvgPicture.asset(
-                            'assets/Icons/amity_ic_default_community_avatar.svg',
-                            width: 24,
-                            height: 18,
-                            package: 'amity_uikit_beta_service',
-                          ),
-                        )),
-                  ),
+                  child: _buildCommunityAvatar(community),
                 ),
                 Container(
                   width: 80,
@@ -259,6 +243,33 @@ class AmityJoinCommunityView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCommunityAvatar(AmityCommunity community) {
+    final url = community.avatarImage?.getUrl(AmityImageSize.MEDIUM);
+    final placeholder = Container(
+      width: 80,
+      height: 80,
+      color: theme.baseColorShade3,
+      child: Center(
+        child: SvgPicture.asset(
+          'assets/Icons/amity_ic_default_community_avatar.svg',
+          width: 24,
+          height: 18,
+          package: 'amity_uikit_beta_service',
+        ),
+      ),
+    );
+    if (url == null || url.isEmpty || !isValidImageUrl(url)) {
+      return placeholder;
+    }
+    return Image.network(
+      url,
+      width: 80,
+      height: 80,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => placeholder,
     );
   }
 }

@@ -16,6 +16,7 @@ import 'package:amity_uikit_beta_service/v4/utils/amity_dialog.dart';
 import 'package:amity_uikit_beta_service/v4/utils/bloc_extension.dart';
 import 'package:amity_uikit_beta_service/v4/utils/compact_string_converter.dart';
 import 'package:amity_uikit_beta_service/v4/utils/date_time_extension.dart';
+import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -771,7 +772,7 @@ class AmityChatAvatar extends BaseElement {
         package: 'amity_uikit_beta_service',
       );
     } else {
-      final isAvatarAvailable = avatarUrl != null && avatarUrl!.isNotEmpty;
+      final isAvatarAvailable = avatarUrl != null && avatarUrl!.isNotEmpty && isValidImageUrl(avatarUrl!);
       if (isAvatarAvailable) {
         return SizedBox(
           width: 40,

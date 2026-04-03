@@ -4,6 +4,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/v4/core/base_element.dart';
 import 'package:amity_uikit_beta_service/v4/core/styles.dart';
 import 'package:amity_uikit_beta_service/v4/core/theme.dart';
+import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -55,7 +56,7 @@ class AmityChannelAvatar extends BaseElement {
 
   @override
   Widget buildElement(BuildContext context) {
-    final isAvatarAvailable = avatarUrl != null && avatarUrl!.isNotEmpty;
+    final isAvatarAvailable = avatarUrl != null && avatarUrl!.isNotEmpty && isValidImageUrl(avatarUrl!);
 
     Widget avatarWidget;
     if (isAvatarAvailable) {
