@@ -67,11 +67,11 @@ class AmityCommunityCategoriesView extends NewBaseComponent {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (category.avatar != null)
+            if (category.avatar != null && (category.avatar?.fileUrl ?? '').startsWith('http'))
               Padding(
                 padding: const EdgeInsets.only(right: 4),
                 child: Image.network(
-                  category.avatar?.fileUrl ?? '',
+                  category.avatar!.fileUrl!,
                   width: 24,
                   height: 24,
                   fit: BoxFit.cover,

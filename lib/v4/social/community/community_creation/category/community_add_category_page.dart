@@ -131,7 +131,7 @@ class AmityCommunityAddCategoryPage extends NewBasePage {
                 shape: BoxShape.circle,
                 color: theme.baseColorShade4,
               ),
-              child: category.icon != null
+              child: category.icon != null && _isValidUrl(category.icon!.getUrl(AmityImageSize.SMALL))
                   ? Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -228,6 +228,15 @@ class AmityCommunityAddCategoryPage extends NewBasePage {
           endIndent: 0,
           height: 1,
         ));
+  }
+
+  bool _isValidUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      return uri.scheme.startsWith('http') && uri.host.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
 
   Widget _placeholderAvatar() {

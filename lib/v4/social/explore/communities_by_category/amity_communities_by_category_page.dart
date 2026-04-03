@@ -73,25 +73,7 @@ class AmityCommunitiesByCategoryPage extends NewBasePage {
         children: [
           ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: Image.network(
-                community.avatarImage?.getUrl(AmityImageSize.MEDIUM) ?? '',
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 80,
-                  height: 80,
-                  color: theme.baseColorShade3,
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/Icons/amity_ic_default_community_avatar.svg',
-                      width: 24,
-                      height: 18,
-                      package: 'amity_uikit_beta_service',
-                    ),
-                  ),
-                ),
-              )),
+              child: _buildCommunityAvatar(community)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -198,5 +180,41 @@ class AmityCommunitiesByCategoryPage extends NewBasePage {
         communityId: community.communityId ?? '',
       ),
     ));
+  }
+
+  Widget _buildCommunityAvatar(AmityCommunity community) {
+    final url = community.avatarImage?.getUrl(AmityImageSize.MEDIUM);
+    final placeholder = Container(
+      width: 80,
+      height: 80,
+      color: theme.baseColorShade3,
+      child: Center(
+        child: SvgPicture.asset(
+          'assets/Icons/amity_ic_default_community_avatar.svg',
+          width: 24,
+          height: 18,
+          package: 'amity_uikit_beta_service',
+        ),
+      ),
+    );
+    if (url == null || url.isEmpty || !_isValidImageUrl(url)) {
+      return placeholder;
+    }
+    return Image.network(
+      url,
+      width: 80,
+      height: 80,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => placeholder,
+    );
+  }
+
+  bool _isValidImageUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      return uri.scheme.startsWith('http') && uri.host.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
 }

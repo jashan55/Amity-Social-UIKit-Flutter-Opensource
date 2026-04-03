@@ -234,7 +234,7 @@ class AmityRecommendedCommunityAvatarView extends StatelessWidget {
           topLeft: Radius.circular(8),
           topRight: Radius.circular(8),
         ),
-        child: image?.getUrl(AmityImageSize.MEDIUM) != null
+        child: _hasValidUrl()
             ? Image.network(
                 image!.getUrl(AmityImageSize.MEDIUM),
                 fit: BoxFit.cover,
@@ -244,6 +244,17 @@ class AmityRecommendedCommunityAvatarView extends StatelessWidget {
             : _buildPlaceholder(),
       ),
     );
+  }
+
+  bool _hasValidUrl() {
+    if (image == null) return false;
+    try {
+      final url = image!.getUrl(AmityImageSize.MEDIUM);
+      final uri = Uri.parse(url);
+      return uri.scheme.startsWith('http') && uri.host.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
 
   Widget _buildPlaceholder() {
