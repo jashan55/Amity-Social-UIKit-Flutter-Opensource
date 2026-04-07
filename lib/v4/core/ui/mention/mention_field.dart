@@ -828,70 +828,68 @@ class _MentionTextFieldState extends State<MentionTextField>
         ),
       );
     } else {
-      final window = WidgetsBinding.instance.window;
-      final keyboardHeight = window.viewInsets.bottom / window.devicePixelRatio;
-      final basePadding = (keyboardHeight > 0)
-          ? widget.suggestionOverlayBottomPaddingWhenKeyboardOpen
-          : widget.suggestionOverlayBottomPaddingWhenKeyboardClosed;
-      final bottomOffset = basePadding + keyboardHeight;
       return OverlayEntry(
-        builder: (context) => Material(
-          color: Colors.transparent, // Transparent material to capture taps
-          child: GestureDetector(
-            behavior:
-                HitTestBehavior.opaque, // Changed to opaque to capture all taps
-            onTap: () {
-
-              _mentionController.dismissCurrentMention();
-              _removeOverlay();
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width, // Full screen width
-              height: MediaQuery.of(context).size.height, // Full screen height
-              color: Colors.transparent, // Transparent container
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 8.0,
-                    right: 8.0,
-                    bottom: bottomOffset,
-                    child: GestureDetector(
-                      // This prevents taps on the suggestion list from dismissing
-                      onTap: () {/* Do nothing, preventing tap propagation */},
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Material(
-                            elevation: 2,
-                            shadowColor: Colors.black54,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Container(
-                              height: containerHeight,
-                              decoration: BoxDecoration(
-                                color: widget.theme.backgroundColor,
+        builder: (context) {
+          final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+          final basePadding = (keyboardHeight > 0)
+              ? widget.suggestionOverlayBottomPaddingWhenKeyboardOpen
+              : widget.suggestionOverlayBottomPaddingWhenKeyboardClosed;
+          final bottomOffset = basePadding + keyboardHeight;
+          return Material(
+            color: Colors.transparent,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                _mentionController.dismissCurrentMention();
+                _removeOverlay();
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.transparent,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: 8.0,
+                      right: 8.0,
+                      bottom: bottomOffset,
+                      child: GestureDetector(
+                        onTap: () {/* Prevent tap propagation */},
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Material(
+                              elevation: 2,
+                              shadowColor: Colors.black54,
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                    color: Colors.grey.withOpacity(0.2)),
                               ),
-                              child: suggestionList,
+                              child: Container(
+                                height: containerHeight,
+                                decoration: BoxDecoration(
+                                  color: widget.theme.backgroundColor,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.2)),
+                                ),
+                                child: suggestionList,
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            top: -6,
-                            right: -4,
-                            child: _buildDismissButton(),
-                          ),
-                        ],
+                            Positioned(
+                              top: -6,
+                              right: -4,
+                              child: _buildDismissButton(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       );
     }
   }

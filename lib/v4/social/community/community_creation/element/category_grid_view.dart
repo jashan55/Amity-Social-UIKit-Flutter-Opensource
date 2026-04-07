@@ -70,7 +70,7 @@ class _CategoryGridViewState extends State<CategoryGridView> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: widget.theme.baseColorShade4,
-                            image: item.icon != null
+                            image: item.icon != null && _isValidUrl(item.icon!.getUrl(AmityImageSize.SMALL))
                                 ? DecorationImage(
                                     image: NetworkImage(item.icon!
                                         .getUrl(AmityImageSize.SMALL)),
@@ -109,6 +109,15 @@ class _CategoryGridViewState extends State<CategoryGridView> {
           ),
       ],
     );
+  }
+
+  bool _isValidUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      return uri.scheme.startsWith('http') && uri.host.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
 
   Widget _placeholderAvatar() {

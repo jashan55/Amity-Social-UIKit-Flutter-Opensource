@@ -73,7 +73,7 @@ class AmityCommunityCategoriesComponent extends NewBaseComponent {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            category.avatar != null
+            category.avatar != null && category.avatar!.getUrl(AmityImageSize.SMALL).startsWith('http')
                 ? ClipOval(
                     child: SizedBox(
                       width: 28,

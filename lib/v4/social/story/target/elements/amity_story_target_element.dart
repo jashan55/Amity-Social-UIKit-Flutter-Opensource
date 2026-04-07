@@ -43,18 +43,26 @@ class AmityStoryTargetElement extends BaseElement {
 
   Widget getProfileIcon(AmityStoryTarget storyTarget) {
     if (storyTarget is AmityStoryTargetCommunity) {
-      return storyTarget.community?.avatarImage != null
-          ? ClipRRect(
-              borderRadius: BorderRadius.circular(100),
+      if (storyTarget.community?.avatarImage != null) {
+        // Use avatarUrl from parent (proper HTTP URL via getUrl()) if available,
+        // otherwise fall back to fileUrl (but only if it's a valid HTTP URL)
+        String? imageUrl = avatarUrl.isNotEmpty ? avatarUrl : null;
+        imageUrl ??= storyTarget.community!.avatarImage!.fileUrl;
+
+        if (imageUrl != null && imageUrl.isNotEmpty && isValidImageUrl(imageUrl)) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(100),
             child: AmityNetworkImage(
-                imageUrl: storyTarget.community!.avatarImage!.fileUrl!,
-                placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder.svg",
-              ),
-          )
-          : const AmityNetworkImage(
-              imageUrl: "",
+              imageUrl: imageUrl,
               placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder.svg",
-            );
+            ),
+          );
+        }
+      }
+      return const AmityNetworkImage(
+        imageUrl: "",
+        placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder.svg",
+      );
     }
 
     return const AmityNetworkImage(imageUrl: "", placeHolderPath: "assets/Icons/amity_ic_community_avatar_placeholder.svg");

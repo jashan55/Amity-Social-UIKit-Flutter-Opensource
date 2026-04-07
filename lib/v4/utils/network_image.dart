@@ -22,7 +22,7 @@ class AmityNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (imageUrl != null && imageUrl!.isNotEmpty) {
+    if (imageUrl != null && imageUrl!.isNotEmpty && isValidImageUrl(imageUrl!)) {
       return _renderImage();
     } else {
       return SvgPicture.asset(
@@ -134,16 +134,28 @@ Future<AmityImageWithSize> getImageWithSize(
 bool _isHttpUrl(String url) {
   try {
     final uri = Uri.parse(url);
-
-    // Check if it's an HTTP URL
-    if (uri.scheme != null && uri.host != null) {
-      return uri.scheme.startsWith('http');
-    }
-
-    // If it's not an HTTP URL, check if it's a local path
-    return false;
+    return uri.scheme.startsWith('http') && uri.host.isNotEmpty;
   } catch (_) {
-    // If parsing fails, it's likely not a valid URL
+    return false;
+  }
+}
+
+/// Returns true if the URL is usable for display — either a valid HTTP URL
+/// or a valid local file path. Rejects empty/broken URIs like "file:///".
+bool isValidImageUrl(String url) {
+  if (url.isEmpty) return false;
+  try {
+    final uri = Uri.parse(url);
+    if (uri.scheme == 'http' || uri.scheme == 'https') {
+      return uri.host.isNotEmpty;
+    }
+    if (uri.scheme == 'file') {
+      // "file:///" with no actual path is invalid
+      return uri.path.length > 1;
+    }
+    // Local file path (no scheme)
+    return url.startsWith('/') && url.length > 1;
+  } catch (_) {
     return false;
   }
 }

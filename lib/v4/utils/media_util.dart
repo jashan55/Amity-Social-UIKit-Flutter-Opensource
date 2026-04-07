@@ -16,11 +16,20 @@ Future<bool> isVideoFileMime(XFile file) async {
 }
 
 ImageProvider getAvatarImageFromUrl(String? avatarUrl) {
-  if (avatarUrl != null && avatarUrl.isNotEmpty) {
+  if (avatarUrl != null && avatarUrl.isNotEmpty && _isValidHttpUrl(avatarUrl)) {
     return NetworkImage(avatarUrl);
   } else {
     return const AssetImage("assets/images/user_placeholder.png",
         package: "amity_uikit_beta_service");
+  }
+}
+
+bool _isValidHttpUrl(String url) {
+  try {
+    final uri = Uri.parse(url);
+    return uri.scheme.startsWith('http') && uri.host.isNotEmpty;
+  } catch (_) {
+    return false;
   }
 }
 

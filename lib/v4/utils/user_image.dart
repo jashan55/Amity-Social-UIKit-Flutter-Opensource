@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/v4/utils/network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../core/theme.dart';
@@ -48,7 +49,7 @@ class AmityUserImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (imageUrl != null && imageUrl!.isNotEmpty) {
+    if (imageUrl != null && imageUrl!.isNotEmpty && isValidImageUrl(imageUrl!)) {
       return Image.network(
         imageUrl!,
         fit: BoxFit.cover,

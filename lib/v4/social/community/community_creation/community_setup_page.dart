@@ -176,6 +176,9 @@ class AmityCommunitySetupPage extends NewBasePage {
 
   Widget _getProfileAvatarWidget(
       BuildContext context, CommunitySetupPageState state) {
+    final avatarUrl = state.avatar?.getUrl(AmityImageSize.MEDIUM);
+    final hasValidAvatar = avatarUrl != null && avatarUrl.isNotEmpty && Uri.tryParse(avatarUrl)?.hasScheme == true && (Uri.tryParse(avatarUrl)?.host.isNotEmpty ?? false);
+
     return Container(
       height: 188,
       decoration: BoxDecoration(
@@ -184,11 +187,12 @@ class AmityCommunitySetupPage extends NewBasePage {
                 image: FileImage(state.pickedImage!),
                 fit: BoxFit.cover,
               )
-            : DecorationImage(
-                image: NetworkImage(
-                    state.avatar?.getUrl(AmityImageSize.MEDIUM) ?? ''),
-                fit: BoxFit.cover,
-              ),
+            : hasValidAvatar
+                ? DecorationImage(
+                    image: NetworkImage(avatarUrl),
+                    fit: BoxFit.cover,
+                  )
+                : null,
         color: Colors.black.withOpacity(0.5),
       ),
       child: Center(
