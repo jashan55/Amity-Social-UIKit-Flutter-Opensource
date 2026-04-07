@@ -296,10 +296,10 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
               controller!,
               child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
                 return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
+                  behavior: HitTestBehavior.translucent,
                   onScaleStart: _handleScaleStart,
                   onScaleUpdate: _handleScaleUpdate,
-                  onTapDown: (TapDownDetails details) => onViewFinderTap(details, constraints),
+                  onTapUp: (TapUpDetails details) => onViewFinderTap(details, constraints),
                 );
               }),
             ),
@@ -802,7 +802,7 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
     await controller!.setZoomLevel(_currentScale);
   }
 
-  void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
+  void onViewFinderTap(TapUpDetails details, BoxConstraints constraints) {
     if (controller == null) {
       return;
     }
