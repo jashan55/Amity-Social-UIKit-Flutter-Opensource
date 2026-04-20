@@ -121,7 +121,7 @@ class AmityChatPage extends NewBasePage {
                       icon: SvgPicture.asset(
                         "assets/Icons/amity_ic_back_button.svg",
                         package: 'amity_uikit_beta_service',
-                        color: theme.secondaryColor,
+                        color: theme.baseColor,
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -191,7 +191,7 @@ class AmityChatPage extends NewBasePage {
                             width: 24,
                             height: 24,
                             colorFilter: ColorFilter.mode(
-                                theme.secondaryColor, BlendMode.srcIn),
+                                theme.baseColor, BlendMode.srcIn),
                           ),
                           onPressed: () {
                             HapticFeedback.heavyImpact();
@@ -237,23 +237,23 @@ class AmityChatPage extends NewBasePage {
                                       ChatPageEventMarkReadMessage(
                                           message: firstItem));
                                 }
+                                // After layout, detect first overflow and update stable state
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  if (!state.contentOverflowsScreen &&
+                                      state.scrollController.hasClients &&
+                                      state.scrollController.position.maxScrollExtent > 0) {
+                                    context.read<ChatPageBloc>().add(const ChatPageContentOverflowChanged());
+                                  }
+                                });
                                 return ListView.builder(
                                   padding: const EdgeInsets.only(bottom: 8),
                                   controller: state.scrollController,
-                                  reverse: state.useReverseUI &&
-                                      state.scrollController.hasClients &&
-                                      state.scrollController.position
-                                              .maxScrollExtent >
-                                          0,
+                                  reverse: state.useReverseUI && state.contentOverflowsScreen,
                                   cacheExtent: 1000,
                                   itemCount: state.messages.length,
                                   itemBuilder: (context, index) {
                                     ChatItem item;
-                                    if (state.useReverseUI &&
-                                        state.scrollController.hasClients &&
-                                        state.scrollController.position
-                                                .maxScrollExtent >
-                                            0) {
+                                    if (state.useReverseUI && state.contentOverflowsScreen) {
                                       item = state.messages[index];
                                     } else {
                                       final messageIndex =
@@ -524,7 +524,7 @@ class AmityChatPage extends NewBasePage {
                                   }
                                 });
                                 state.scrollController.animateTo(
-                                  0.0,
+                                  (state.useReverseUI && state.contentOverflowsScreen) ? 0.0 : state.scrollController.position.maxScrollExtent,
                                   curve: Curves.easeOut,
                                   duration: const Duration(milliseconds: 300),
                                 );
@@ -589,10 +589,7 @@ class AmityChatPage extends NewBasePage {
     if (state.aroundMessageId != null) {
       if (state.bounceTargetIndex != null) {
         // Calculate target index considering reverse UI like group chat
-        final shouldUseReverse = state.useReverseUI && state.messages.isNotEmpty &&
-            state.scrollController.hasClients &&
-            state.scrollController.position.maxScrollExtent > 0;
-        final targetIndex = shouldUseReverse 
+        final targetIndex = state.useReverseUI && state.contentOverflowsScreen
             ? state.bounceTargetIndex! 
             : (state.messages.length - 1 - state.bounceTargetIndex!);
                     

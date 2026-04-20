@@ -423,6 +423,12 @@ class AmityGroupChatPageBloc
       emit(state.copyWith(bounceTargetIndex: null));
     });
 
+    on<GroupChatPageContentOverflowChanged>((event, emit) async {
+      if (!state.contentOverflowsScreen) {
+        emit(state.copyWith(contentOverflowsScreen: true));
+      }
+    });
+
     on<GroupChatPageSetLoadingToastDismissed>((event, emit) async {
       emit(state.copyWith(isLoadingToastDismissed: event.isDismissed));
     });

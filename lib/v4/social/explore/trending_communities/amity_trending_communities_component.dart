@@ -86,7 +86,12 @@ class AmityTrendingCommunitiesView extends StatelessWidget {
                       builder: (context) => AmityCommunityProfilePage(
                         communityId: entry.value.communityId!,
                       ),
-                    ));
+                    )).then((_) {
+                      context
+                          .read<TrendingCommunitiesCubit>()
+                          .refreshController
+                          ?.notifyRefresh();
+                    });
                   },
                   onJoinTap: () {
                     if (entry.value.isJoined == true) {
