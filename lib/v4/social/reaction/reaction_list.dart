@@ -482,7 +482,6 @@ class AmityReactionList extends NewBaseComponent {
                       color: theme.baseColor,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'SF Pro Text',
                     ),
                   ),
                   if (referenceType == AmityReactionReferenceType.MESSAGE &&

@@ -57,7 +57,6 @@ class _FollowScreenState extends State<FollowScreen> {
               labelStyle: const TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'SF Pro Text',
               ),
               tabs: const [
                 Tab(

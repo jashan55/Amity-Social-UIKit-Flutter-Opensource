@@ -76,7 +76,6 @@ class AmityHyperlinkTextField extends StatelessWidget {
       style: TextStyle(
         color : textColor,
         fontSize: 16,
-        fontFamily: "SF Pro Text",
       ),
     );
   }

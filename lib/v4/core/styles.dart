@@ -49,8 +49,11 @@ class AmityTextStyle {
   // At the moment, i don't want to apply it everywhere because it might cause issue of font size. So, we apply it only where it is necessary.
   static TextStyle getStyle(
       double fontSize, FontWeight fontWeight, Color color, double? textHeight) {
+    // fontFamily intentionally omitted — inherits from the host app's
+    // Theme.textTheme / DefaultTextStyle so the integrating app's font
+    // (incl. iOS) flows through. Hardcoding 'SF Pro Text' here used to
+    // override the host font on iOS because it is the real iOS system family.
     return TextStyle(
-      fontFamily: 'SF Pro Text',
       fontSize: fontSize,
       fontWeight: fontWeight,
       height: textHeight,

@@ -105,13 +105,11 @@ class AmitySocialGlobalSearchPage extends NewBasePage {
                                 fontSize: 17,
                                 fontWeight: FontWeight.w600,
                                 color: theme.primaryColor,
-                                fontFamily: 'SF Pro Text',
                               ),
                               unselectedLabelStyle: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w600,
                                 color: theme.baseColorShade3,
-                                fontFamily: 'SF Pro Text',
                               ),
                               tabs: [
                                 Tab(text: context.l10n.title_communities),

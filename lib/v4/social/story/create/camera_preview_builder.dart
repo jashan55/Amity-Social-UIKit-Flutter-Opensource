@@ -454,7 +454,6 @@ class _CameraPreviewBuilderState extends State<CameraPreviewBuilder>
                   color: Colors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  fontFamily: "'SF Pro Text'",
                 ),
               ),
             ),

@@ -136,7 +136,6 @@ class AmityStoryHeaderRow extends StatelessWidget {
                                         fontSize: 15,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
-                                        fontFamily: "SF Pro Text",
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -162,7 +161,6 @@ class AmityStoryHeaderRow extends StatelessWidget {
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.white,
-                                      fontFamily: "SF Pro Text",
                                     ),
                                   ),
                                   Container(
@@ -182,7 +180,6 @@ class AmityStoryHeaderRow extends StatelessWidget {
                                       style: const TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400,
-                                        fontFamily: "SF Pro Text",
                                         color: Colors.white,
                                       ),
                                       maxLines: 1,

@@ -170,7 +170,6 @@ class AmityStoryTargetElement extends BaseElement {
                       style:  TextStyle(
                         fontSize: 13,
                         color: theme.baseColor,
-                        fontFamily: "SF Pro Text",
                         fontWeight: FontWeight.w500,
                       ),
                     ),

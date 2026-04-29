@@ -48,7 +48,6 @@ class AmityStoryHyperlinkView extends StatelessWidget {
                         : getHyperlinkText(hyperlink),
                     maxLines: 1,
                     style: const TextStyle(
-                      fontFamily: "SF Pro Text",
                       color: Colors.black,
                       fontSize: 14,
                     ),

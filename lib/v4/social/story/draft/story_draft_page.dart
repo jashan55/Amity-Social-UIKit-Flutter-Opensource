@@ -930,7 +930,6 @@ class ShareButton extends BaseElement {
                   color: theme.baseColor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  fontFamily: "SF Pro Text",
                 ),
               ),
             ),

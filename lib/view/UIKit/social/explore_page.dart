@@ -92,7 +92,6 @@ class _CommunityPageState extends State<CommunityPage> {
                       labelStyle: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'SF Pro Text',
                       ),
                       tabs: const [
                         Tab(

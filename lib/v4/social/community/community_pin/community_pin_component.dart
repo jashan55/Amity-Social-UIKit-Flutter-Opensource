@@ -121,7 +121,6 @@ class CommunityPinComponent extends NewBaseComponent {
               style: TextStyle(
                 color: theme.baseColorShade3,
                 fontSize: 17,
-                fontFamily: 'SF Pro Text',
                 fontWeight: FontWeight.w600,
               ),
             ),

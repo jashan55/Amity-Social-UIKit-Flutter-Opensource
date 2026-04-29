@@ -169,7 +169,6 @@ class _MemberManagementPageState extends State<MemberManagementPage> {
                   labelStyle: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'SF Pro Text',
                   ),
 
                   tabs: const [

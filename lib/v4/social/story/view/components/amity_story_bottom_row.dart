@@ -109,7 +109,6 @@ class AmityStoryUploadFailedRow extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,
-                  fontFamily: "SF Pro Text",
                   fontWeight: FontWeight.w400,
                 ),
               ),

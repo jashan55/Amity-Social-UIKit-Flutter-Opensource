@@ -54,7 +54,6 @@ class AmityStoryReactionCountElement extends StatelessWidget {
             Text(
               count,
               style: const TextStyle(
-                fontFamily: "SF Pro Text",
                 color: Colors.white,
                 fontSize: 14,
               ),

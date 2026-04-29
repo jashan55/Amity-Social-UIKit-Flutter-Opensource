@@ -132,7 +132,6 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                       foregroundColor: Colors.black,
                       textStyle: const TextStyle(
                         fontSize: 15,
-                        fontFamily: "SF Pro Text",
                       ),
                     ),
                     onPressed: () {
@@ -158,7 +157,6 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                       'Cancel',
                       style: TextStyle(
                         fontSize: 15,
-                        fontFamily: "SF Pro Text",
                         color: widget.theme.baseColor,
                       ),
                     ),
@@ -171,7 +169,6 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
                             color: widget.theme.baseColor,
-                            fontFamily: "SF Pro Text",
                           ),
                         ),
                   DoneButton(
@@ -201,13 +198,12 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                 children: [
                   Text(
                     "URL",
-                    style: TextStyle(fontFamily: "SF Pro Text", fontSize: 17, color: widget.theme.baseColor, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 17, color: widget.theme.baseColor, fontWeight: FontWeight.w600),
                   ),
                   const Text(
                     "*",
                     style: TextStyle(
                       color: Colors.red,
-                      fontFamily: "SF Pro Text",
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
@@ -249,12 +245,11 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                   children: [
                     Text(
                       "Customize link text",
-                      style: TextStyle(fontFamily: "SF Pro Text", color: widget.theme.baseColor, fontSize: 17, fontWeight: FontWeight.w600),
+                      style: TextStyle(color: widget.theme.baseColor, fontSize: 17, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       "${customizedTextController.text.length}/30",
                       style: const TextStyle(
-                        fontFamily: "SF Pro Text",
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
@@ -290,7 +285,6 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                     child: const Text(
                       "This text will show on the link instead of URL.",
                       style: TextStyle(
-                        fontFamily: "SF Pro Text",
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
@@ -330,7 +324,6 @@ class _HyperLinkBottomSheetBuilderState extends State<HyperLinkBottomSheetBuilde
                               Text(
                                 "Remove link",
                                 style: TextStyle(
-                                  fontFamily: "SF Pro Text",
                                   fontSize: 15,
                                   fontWeight: FontWeight.w400,
                                   color: widget.theme.alertColor,
@@ -366,7 +359,7 @@ class DoneButton extends BaseElement {
     return TextButton(
       style: TextButton.styleFrom(
         foregroundColor: theme.primaryColor,
-        textStyle: const TextStyle(fontSize: 15, fontFamily: "SF Pro Text"),
+        textStyle: const TextStyle(fontSize: 15),
         disabledForegroundColor: theme.primaryColor.blend(ColorBlendingOption.shade2),
       ),
       onPressed: onPressed,

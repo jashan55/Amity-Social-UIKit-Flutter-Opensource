@@ -273,7 +273,6 @@ class _AmityCommentCreatorInternalState
                       style: TextStyle(
                         color: widget.theme.baseColorShade1,
                         fontSize: 15,
-                        fontFamily: 'SF Pro Text',
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -282,7 +281,6 @@ class _AmityCommentCreatorInternalState
                       style: TextStyle(
                         color: widget.theme.baseColorShade1,
                         fontSize: 15,
-                        fontFamily: 'SF Pro Text',
                         fontWeight: FontWeight.w600,
                       ),
                     ),

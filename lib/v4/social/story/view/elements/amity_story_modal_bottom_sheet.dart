@@ -113,7 +113,6 @@ class AmityBottomSheetActionItem extends StatelessWidget {
               text,
               style: TextStyle(
                 fontSize: 15,
-                fontFamily: "SF Pro Text",
                 fontWeight: FontWeight.w600,
                 color: textColor ?? Colors.black,
               ),

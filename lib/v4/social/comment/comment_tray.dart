@@ -172,7 +172,6 @@ class _CommentTrayComponentState extends State<CommentTrayComponent> {
                                     "Comments are disabled for this story",
                                     style: TextStyle(
                                       fontSize: 15,
-                                      fontFamily: "SF Pro Text",
                                       color: Color(
                                         0xff898E9E,
                                       ),

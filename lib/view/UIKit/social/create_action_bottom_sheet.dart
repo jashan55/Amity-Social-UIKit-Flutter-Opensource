@@ -42,7 +42,6 @@ class CreateActionBottomSheet {
                 title: const Text(
                   "Post",
                   style: TextStyle(
-                    fontFamily: "SF Pro Text",
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
@@ -72,7 +71,6 @@ class CreateActionBottomSheet {
                 title: const Text(
                   "Story",
                   style: TextStyle(
-                    fontFamily: "SF Pro Text",
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),

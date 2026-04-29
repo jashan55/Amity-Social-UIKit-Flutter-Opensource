@@ -23,7 +23,7 @@ class AmityStoryUploadProgressRow extends StatelessWidget {
           SizedBox(width: 10),
           Text(
             "Uploading...",
-            style: TextStyle(color: Colors.white , fontSize: 15 , fontFamily: "SF Pro Text" , fontWeight: FontWeight.w400),
+            style: TextStyle(color: Colors.white , fontSize: 15 , fontWeight: FontWeight.w400),
           ),
         ],
       ),
