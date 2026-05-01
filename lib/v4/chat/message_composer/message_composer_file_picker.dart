@@ -17,27 +17,37 @@ extension MessageComposerFilePicker on AmityMessageComposer {
         return;
       }
 
-      final result = await FilePicker.platform.pickFiles(
-        type: type,
-        allowMultiple: false,
-        withData: false,
-        withReadStream: false,
-      );
+      XFile? selectedMedia;
 
-      if (result != null && result.files.isNotEmpty) {
-        final pickedFile = result.files.first;
-        final path = pickedFile.path;
-        if (path != null) {
-          final selectedMedia = XFile(path);
-          action.onMessageCreated();
-          if (!context.mounted) return;
-          context.read<MessageComposerBloc>().add(
-                MessageComposerSelectImageAndVideoEvent(
-                  selectedMedia: selectedMedia,
-                ),
-              );
-          return;
+      // Route the Media button through image_picker so Android 13+ uses the
+      // system Photo Picker (ACTION_PICK_IMAGES) instead of the Documents UI
+      // that file_picker falls back to without READ_MEDIA_* permissions —
+      // otherwise Media and File look identical.
+      if (type == FileType.media) {
+        MediaPermissionHandler().configureAndroidPhotoPicker(true);
+        selectedMedia = await ImagePicker().pickMedia();
+      } else {
+        final result = await FilePicker.platform.pickFiles(
+          type: type,
+          allowMultiple: false,
+          withData: false,
+          withReadStream: false,
+        );
+        if (result != null && result.files.isNotEmpty) {
+          final path = result.files.first.path;
+          if (path != null) selectedMedia = XFile(path);
         }
+      }
+
+      if (selectedMedia != null) {
+        action.onMessageCreated();
+        if (!context.mounted) return;
+        context.read<MessageComposerBloc>().add(
+              MessageComposerSelectImageAndVideoEvent(
+                selectedMedia: selectedMedia,
+              ),
+            );
+        return;
       }
 
       toastBloc.add(AmityToastDismiss());

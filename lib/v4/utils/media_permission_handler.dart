@@ -84,7 +84,7 @@ class MediaPermissionHandler {
     if (await handleMediaPermissions()) {
       final ImagePicker picker = ImagePicker();
       try {
-        _configureAndroidPhotoPicker(true);
+        configureAndroidPhotoPicker(true);
         final XFile? image = await picker.pickImage(
           source: ImageSource.gallery,
         );
@@ -102,7 +102,7 @@ class MediaPermissionHandler {
     if (await handleMediaPermissions()) {
       final ImagePicker picker = ImagePicker();
       try {
-        _configureAndroidPhotoPicker(true);
+        configureAndroidPhotoPicker(true);
         final XFile? video = await picker.pickVideo(
           source: ImageSource.gallery,
         );
@@ -139,7 +139,7 @@ class MediaPermissionHandler {
     return [];
   }
 
-  void _configureAndroidPhotoPicker(bool enabled) {
+  void configureAndroidPhotoPicker(bool enabled) {
     final platform = ImagePickerPlatform.instance;
     if (platform is ImagePickerAndroid) {
       platform.useAndroidPhotoPicker = enabled;
