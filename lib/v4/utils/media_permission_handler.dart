@@ -17,47 +17,29 @@ import 'package:photo_manager/photo_manager.dart';
 class MediaPermissionHandler {
   // Check and request permissions
   Future<bool> handleMediaPermissions() async {
-    // For Android 13+ (API level 33+)
-    if (await _isAndroid13OrHigher()) {
-      final status = await Permission.photos.status;
-      if (status.isDenied) {
-        // Request permissions
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.photos,
-          Permission.videos,
-        ].request();
+    // Android 13+ uses the system Photo Picker (ACTION_PICK_IMAGES), which is
+    // sandboxed and requires no runtime permissions. Skip the permission gate
+    // entirely — requesting READ_MEDIA_IMAGES/VIDEO without the host declaring
+    // them in the manifest causes a deadlocked permission dialog.
+    if (await _isAndroid13OrHigher()) return true;
 
-        final granted = statuses[Permission.photos]!.isGranted &&
-            statuses[Permission.videos]!.isGranted;
-        
-        if (!granted) {
-          await _showPermissionDialog();
-        }
-        
-        return granted;
-      } else if (status.isPermanentlyDenied) {
+    // Android 12 and below: keep the existing storage-permission path as a
+    // safety net for hosts that still declare READ_EXTERNAL_STORAGE with
+    // maxSdkVersion=32.
+    final status = await Permission.storage.status;
+    if (status.isDenied) {
+      final result = await Permission.storage.request();
+
+      if (!result.isGranted) {
         await _showPermissionDialog();
-        return false;
       }
-      return status.isGranted;
+
+      return result.isGranted;
+    } else if (status.isPermanentlyDenied) {
+      await _showPermissionDialog();
+      return false;
     }
-    // For Android 12 and below
-    else {
-      final status = await Permission.storage.status;
-      if (status.isDenied) {
-        final result = await Permission.storage.request();
-        
-        if (!result.isGranted) {
-          await _showPermissionDialog();
-        }
-        
-        return result.isGranted;
-      } else if (status.isPermanentlyDenied) {
-        await _showPermissionDialog();
-        return false;
-      }
-      return status.isGranted;
-    }
+    return status.isGranted;
   }
 
   Future<void> _showPermissionDialog() async {
@@ -102,7 +84,7 @@ class MediaPermissionHandler {
     if (await handleMediaPermissions()) {
       final ImagePicker picker = ImagePicker();
       try {
-        _configureAndroidPhotoPicker(false);
+        _configureAndroidPhotoPicker(true);
         final XFile? image = await picker.pickImage(
           source: ImageSource.gallery,
         );
@@ -120,7 +102,7 @@ class MediaPermissionHandler {
     if (await handleMediaPermissions()) {
       final ImagePicker picker = ImagePicker();
       try {
-        _configureAndroidPhotoPicker(false);
+        _configureAndroidPhotoPicker(true);
         final XFile? video = await picker.pickVideo(
           source: ImageSource.gallery,
         );
@@ -140,7 +122,7 @@ class MediaPermissionHandler {
         final ImagePickerPlatform imagePickerImplementation =
             ImagePickerPlatform.instance;
         if (imagePickerImplementation is ImagePickerAndroid) {
-          imagePickerImplementation.useAndroidPhotoPicker = false;
+          imagePickerImplementation.useAndroidPhotoPicker = true;
         }
         List<XFile> mediaFiles = [];
 
