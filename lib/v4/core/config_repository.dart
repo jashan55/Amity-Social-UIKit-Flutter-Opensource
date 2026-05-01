@@ -16,6 +16,20 @@ class ConfigRepository {
   late Set<String> excludedList;
   bool _isConfigInitialized = false;
 
+  AmityThemeOverride? _hostOverrideLight;
+  AmityThemeOverride? _hostOverrideDark;
+
+  void setHostThemeOverride({
+    required AmityThemeStyle style,
+    required AmityThemeOverride? override,
+  }) {
+    if (style == AmityThemeStyle.dark) {
+      _hostOverrideDark = override;
+    } else if (style == AmityThemeStyle.light) {
+      _hostOverrideLight = override;
+    }
+  }
+
   Future<void> loadConfig() async {
     if (!_isConfigInitialized) {
       _config = await _loadConfigFile('config');
@@ -142,10 +156,34 @@ extension ThemeConfig on ConfigRepository {
   AmityTheme? _getGlobalTheme(AmityThemeStyle style, AmityTheme fallbackTheme) {
     final globalTheme = _config['theme']?[style.toString().split('.').last]
         as Map<String, dynamic>?;
-    if (globalTheme != null) {
-      return AmityTheme.fromJson(globalTheme, fallbackTheme);
+    final base = globalTheme != null
+        ? AmityTheme.fromJson(globalTheme, fallbackTheme)
+        : null;
+
+    final override = style == AmityThemeStyle.dark
+        ? _hostOverrideDark
+        : _hostOverrideLight;
+    if (override == null) {
+      return base;
     }
-    return null;
+
+    // Layer host override on top of JSON theme: override > JSON > fallback.
+    final src = base ?? fallbackTheme;
+    return AmityTheme(
+      primaryColor: override.primaryColor ?? src.primaryColor,
+      secondaryColor: override.secondaryColor ?? src.secondaryColor,
+      baseColor: override.baseColor ?? src.baseColor,
+      baseInverseColor: override.baseInverseColor ?? src.baseInverseColor,
+      baseColorShade1: override.baseColorShade1 ?? src.baseColorShade1,
+      baseColorShade2: override.baseColorShade2 ?? src.baseColorShade2,
+      baseColorShade3: override.baseColorShade3 ?? src.baseColorShade3,
+      baseColorShade4: override.baseColorShade4 ?? src.baseColorShade4,
+      alertColor: override.alertColor ?? src.alertColor,
+      backgroundColor: override.backgroundColor ?? src.backgroundColor,
+      backgroundShade1Color:
+          override.backgroundShade1Color ?? src.backgroundShade1Color,
+      highlightColor: override.highlightColor ?? src.highlightColor,
+    );
   }
 
   AmityThemeColor _getThemeColor(AmityTheme? theme, AmityTheme fallbackTheme) {

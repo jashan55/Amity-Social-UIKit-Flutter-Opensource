@@ -97,6 +97,40 @@ class AmityThemeColor {
   });
 }
 
+/// Host-app-supplied partial overrides for the v4 theme.
+///
+/// Each field is nullable: `null` means "fall through to the JSON theme
+/// in `assets/config/config.json`, then to the in-code default."
+class AmityThemeOverride {
+  final Color? primaryColor;
+  final Color? secondaryColor;
+  final Color? baseColor;
+  final Color? baseInverseColor;
+  final Color? baseColorShade1;
+  final Color? baseColorShade2;
+  final Color? baseColorShade3;
+  final Color? baseColorShade4;
+  final Color? alertColor;
+  final Color? backgroundColor;
+  final Color? backgroundShade1Color;
+  final Color? highlightColor;
+
+  const AmityThemeOverride({
+    this.primaryColor,
+    this.secondaryColor,
+    this.baseColor,
+    this.baseInverseColor,
+    this.baseColorShade1,
+    this.baseColorShade2,
+    this.baseColorShade3,
+    this.baseColorShade4,
+    this.alertColor,
+    this.backgroundColor,
+    this.backgroundShade1Color,
+    this.highlightColor,
+  });
+}
+
 // Enum to define theme styles
 enum AmityThemeStyle { light, dark, system }
 

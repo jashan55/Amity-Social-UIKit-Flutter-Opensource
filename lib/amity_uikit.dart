@@ -9,6 +9,8 @@ import 'package:amity_uikit_beta_service/utils/navigation_key.dart';
 import 'package:amity_uikit_beta_service/v4/chat/message/parent_message_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amity_uikit_beta_service/v4/core/amity_font_config.dart';
+import 'package:amity_uikit_beta_service/v4/core/config_repository.dart';
+import 'package:amity_uikit_beta_service/v4/core/theme.dart';
 import 'package:amity_uikit_beta_service/v4/core/toast/bloc/amity_uikit_toast_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/globalfeed/bloc/global_feed_bloc.dart';
 import 'package:amity_uikit_beta_service/v4/social/social_home_page/bloc/social_home_bloc.dart';
@@ -191,6 +193,64 @@ class AmityUIKit {
       BuildContext context, Function(AmityUIConfiguration config) config) {
     var provider = Provider.of<AmityUIConfiguration>(context, listen: false);
     config(provider);
+    // Bridge the legacy AppColors channel into the v4 ConfigRepository so
+    // chat/community screens (which read from ConfigRepository, not AppColors)
+    // pick up the host's tenant colors. Only the AppColors fields with a
+    // direct v4 equivalent are forwarded — for full control, hosts can call
+    // configAmityV4Theme directly. See configAmityV4Theme for caveats.
+    configAmityV4Theme(
+      primaryColor: provider.appColors.primary,
+      highlightColor: provider.appColors.primary,
+      baseColor: provider.appColors.base,
+      baseColorShade4: provider.appColors.baseShade4,
+      backgroundColor: provider.appColors.baseBackground,
+    );
+  }
+
+  /// Override the v4 theme used by chat/community/post screens.
+  ///
+  /// v4 widgets read their theme from `ConfigRepository` (sourced from
+  /// `assets/config/config.json` inside the package), not from `AppColors` or
+  /// `Theme.of(context)`. This sets a host-supplied override that wins over
+  /// the bundled JSON theme. Unset fields fall through to JSON, then to the
+  /// in-code defaults in `lib/v4/core/theme.dart`.
+  ///
+  /// Must be called before the v4 widget you want to re-theme is first
+  /// mounted: `NewBaseComponent`/`NewBasePage` cache the theme in a
+  /// `late final`, so already-built screens won't repaint until they remount.
+  void configAmityV4Theme({
+    Color? primaryColor,
+    Color? secondaryColor,
+    Color? baseColor,
+    Color? baseInverseColor,
+    Color? baseColorShade1,
+    Color? baseColorShade2,
+    Color? baseColorShade3,
+    Color? baseColorShade4,
+    Color? alertColor,
+    Color? backgroundColor,
+    Color? backgroundShade1Color,
+    Color? highlightColor,
+    AmityThemeStyle target = AmityThemeStyle.light,
+  }) {
+    final override = AmityThemeOverride(
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
+      baseColor: baseColor,
+      baseInverseColor: baseInverseColor,
+      baseColorShade1: baseColorShade1,
+      baseColorShade2: baseColorShade2,
+      baseColorShade3: baseColorShade3,
+      baseColorShade4: baseColorShade4,
+      alertColor: alertColor,
+      backgroundColor: backgroundColor,
+      backgroundShade1Color: backgroundShade1Color,
+      highlightColor: highlightColor,
+    );
+    ConfigRepository().setHostThemeOverride(
+      style: target,
+      override: override,
+    );
   }
 
   Stream<SessionState> observeSessionState() {
@@ -293,8 +353,20 @@ class AmityUIKitProvider extends StatelessWidget {
       child: Builder(builder: (context) {
         return Consumer<ConfigProvider>(builder: (context, configProvider, _) {
           configProvider.loadConfig();
+          // Derive from the host's outer theme so we don't reset its
+          // colorScheme / appBarTheme / etc. just to apply a font family.
+          final parentTheme = Theme.of(context);
+          final amityFamily = AmityFontConfig.family;
+          final innerTheme = amityFamily == null
+              ? parentTheme
+              : parentTheme.copyWith(
+                  textTheme:
+                      parentTheme.textTheme.apply(fontFamily: amityFamily),
+                  primaryTextTheme: parentTheme.primaryTextTheme
+                      .apply(fontFamily: amityFamily),
+                );
           return MaterialApp(
-            theme: ThemeData(fontFamily: AmityFontConfig.family),
+            theme: innerTheme,
             debugShowCheckedModeBanner: false,
             navigatorKey: NavigationService.navigatorKey,
             home: Builder(builder: (context2) {
